@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --pokemon-red: #ff1c1c;
+  --pokemon-blue: #3c5aa6;
+  --pokemon-yellow: #ffcb05;
+  --pokemon-gold: #d5a100;
+  --pokemon-dark: #1e1e1e;
+  --pokemon-light: #f2f2f2;
+  --pokemon-grass: #78c850;
+  --pokemon-fire: #f08030;
+  --pokemon-water: #6890f0;
+  --pokemon-electric: #f8d030;
+
+  font-family: 'Segoe UI', 'Roboto', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.95);
+  background-color: #1e1e1e;
+  background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png');
+  background-repeat: no-repeat;
+  background-position: 95% 95%;
+  background-size: 200px;
+  background-attachment: fixed;
+  background-blend-mode: soft-light;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+

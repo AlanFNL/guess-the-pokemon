@@ -31788,13 +31788,13 @@
         "chinese": "蕾冠王",
         "french": "Sylveroy"
       },
-      "type": ["Psychic", "Grass"],
+      "type": ["Lobster"],
       "species": "King Pokémon",
       "description": "Calyrex is known in legend as a king that ruled over Galar in ancient times. It has the power to cause hearts to mend and plants to spring forth.",
       "evolution": {},
       "profile": {
-        "height": "1 m",
-        "weight": "8 kg",
+        "height": "0.3 m",
+        "weight": "3 kg",
         "gender": "Genderless",
         "ability": [["Unnerve", "false"]]
       },
@@ -31818,7 +31818,7 @@
       "evolution": {},
       "profile": {
         "height": "1 m",
-        "weight": "8 kg",
+        "weight": "50 kg",
         "gender": "Genderless",
         "ability": [["Unnerve", "false"]]
       },

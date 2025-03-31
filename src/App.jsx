@@ -63,6 +63,7 @@ function App() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [partialTypesEnabled, setPartialTypesEnabled] = useState(true);
   const [shake, setShake] = useState(false);
+  const [playerWon, setPlayerWon] = useState(false);
 
   const maxAttempts = 8;
 
@@ -81,6 +82,7 @@ function App() {
       const randomIndex = Math.floor(Math.random() * pokedex.length);
       const selectedPokemon = pokedex[randomIndex];
       setPokemon(selectedPokemon);
+      console.log(selectedPokemon);
       setGameStarted(true);
       setAttempts(0);
       setGuessHistory([]);
@@ -132,12 +134,19 @@ function App() {
     setGuessHistory((prev) => [{ pokemon: guessedPokemon, matches }, ...prev]);
 
     if (matches.name) {
+      // Show success animation
       setShowSuccess(true);
+      setPlayerWon(true);
+
+      // Set timeout to end the game after the animation
       setTimeout(() => {
-        setNewGame(false);
         setGameOver(true);
-        setGameStarted(false);
-      }, 2000);
+
+        // Clear success state after showing game over
+        setTimeout(() => {
+          setShowSuccess(false);
+        }, 500);
+      }, 2500);
     } else {
       setAttempts((prev) => prev + 1);
       setInputValue("");
@@ -147,10 +156,10 @@ function App() {
   };
 
   useEffect(() => {
-    if (attempts >= maxAttempts) {
+    if (attempts >= maxAttempts && !showSuccess) {
       setGameOver(true);
     }
-  }, [attempts]);
+  }, [attempts, maxAttempts, showSuccess]);
 
   useEffect(() => {
     if (attempts > 0 && attempts % 2 === 0) {
@@ -288,22 +297,45 @@ function App() {
   };
 
   const restartGame = (goToHero = false) => {
-    setNewGame(false);
+    // First reset all game state
     setGameOver(false);
     setAttempts(0);
     setInputValue("");
-    setGameStarted(false);
     setDisplayedHints([]);
     setGuessHistory([]);
     setShowSuccess(false);
+    setPokemon(null);
+    setPlayerWon(false);
 
-    // If goToHero is true, stay at hero screen, otherwise start a new game immediately
+    // Then either go to hero or start a new game
+    setNewGame(false);
+    setGameStarted(false);
+
     if (!goToHero) {
+      // Set a small delay before starting a new game
       setTimeout(() => {
         setNewGame(true);
       }, 300);
     }
   };
+
+  // Add a cleanup effect when the game unmounts
+  useEffect(() => {
+    return () => {
+      // Cleanup function to reset all game state when component unmounts
+      if (gameStarted) {
+        setGameStarted(false);
+        setAttempts(0);
+        setInputValue("");
+        setGameOver(false);
+        setDisplayedHints([]);
+        setGuessHistory([]);
+        setShowSuccess(false);
+        setPokemon(null);
+        setPlayerWon(false);
+      }
+    };
+  }, [gameStarted]);
 
   return (
     <>
@@ -442,7 +474,7 @@ function App() {
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.8, opacity: 0 }}
-                      className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-20"
+                      className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-20"
                     >
                       <motion.div
                         initial={{ rotate: 0 }}
@@ -520,7 +552,7 @@ function App() {
                               <div className="flex flex-wrap gap-1 mt-1">
                                 {/* Type match */}
                                 <div
-                                  className={`guess-feedback flex items-center gap-1  p-1 rounded-md  ${
+                                  className={`guess-feedback flex items-center gap-1 p-1 rounded-md ${
                                     guess.matches.types.full
                                       ? "bg-green-500/30 text-green-300 border border-green-500/40"
                                       : partialTypesEnabled &&
@@ -529,44 +561,61 @@ function App() {
                                       : "bg-red-500/30 text-red-300 border border-red-500/40"
                                   }`}
                                 >
-                                  {guess.matches.types.full ? (
-                                    <FaCheck
-                                      className="text-green-400"
-                                      size={12}
-                                    />
-                                  ) : partialTypesEnabled &&
-                                    guess.matches.types.partial ? (
-                                    <FaAdjust
-                                      className="text-yellow-400"
-                                      size={12}
-                                    />
+                                  {typeof FaCheck !== "undefined" ? (
+                                    guess.matches.types.full ? (
+                                      <FaCheck
+                                        className="text-green-400"
+                                        size={12}
+                                      />
+                                    ) : partialTypesEnabled &&
+                                      guess.matches.types.partial ? (
+                                      <FaAdjust
+                                        className="text-yellow-400"
+                                        size={12}
+                                      />
+                                    ) : (
+                                      <FaTimes
+                                        className="text-red-400"
+                                        size={12}
+                                      />
+                                    )
                                   ) : (
-                                    <FaTimes
-                                      className="text-red-400"
-                                      size={12}
-                                    />
+                                    <span>
+                                      {guess.matches.types.full
+                                        ? "✓"
+                                        : partialTypesEnabled &&
+                                          guess.matches.types.partial
+                                        ? "◑"
+                                        : "✗"}
+                                    </span>
                                   )}
                                   <span>Type</span>
                                 </div>
 
                                 {/* Generation match */}
                                 <div
-                                  className={`guess-feedback flex items-center gap-1  p-1 rounded-md  ${
+                                  className={`guess-feedback flex items-center gap-1 p-1 rounded-md ${
                                     guess.matches.generation
                                       ? "bg-green-500/30 text-green-300 border border-green-500/40"
                                       : "bg-red-500/30 text-red-300 border border-red-500/40"
                                   }`}
                                 >
-                                  {guess.matches.generation ? (
-                                    <FaCheck
-                                      className="text-green-400"
-                                      size={12}
-                                    />
+                                  {typeof FaCheck !== "undefined" ? (
+                                    guess.matches.generation ? (
+                                      <FaCheck
+                                        className="text-green-400"
+                                        size={12}
+                                      />
+                                    ) : (
+                                      <FaTimes
+                                        className="text-red-400"
+                                        size={12}
+                                      />
+                                    )
                                   ) : (
-                                    <FaTimes
-                                      className="text-red-400"
-                                      size={12}
-                                    />
+                                    <span>
+                                      {guess.matches.generation ? "✓" : "✗"}
+                                    </span>
                                   )}
                                   <span>Gen</span>
                                 </div>
@@ -576,22 +625,28 @@ function App() {
                                   (h) => h.name === "species"
                                 ) && (
                                   <div
-                                    className={`guess-feedback flex items-center gap-1  p-1 rounded-md  ${
+                                    className={`guess-feedback flex items-center gap-1 p-1 rounded-md ${
                                       guess.matches.species
                                         ? "bg-green-500/30 text-green-300 border border-green-500/40"
                                         : "bg-red-500/30 text-red-300 border border-red-500/40"
                                     }`}
                                   >
-                                    {guess.matches.species ? (
-                                      <FaCheck
-                                        className="text-green-400"
-                                        size={12}
-                                      />
+                                    {typeof FaCheck !== "undefined" ? (
+                                      guess.matches.species ? (
+                                        <FaCheck
+                                          className="text-green-400"
+                                          size={12}
+                                        />
+                                      ) : (
+                                        <FaTimes
+                                          className="text-red-400"
+                                          size={12}
+                                        />
+                                      )
                                     ) : (
-                                      <FaTimes
-                                        className="text-red-400"
-                                        size={12}
-                                      />
+                                      <span>
+                                        {guess.matches.species ? "✓" : "✗"}
+                                      </span>
                                     )}
                                     <span>Species</span>
                                   </div>
@@ -601,22 +656,28 @@ function App() {
                                   (h) => h.name === "height"
                                 ) && (
                                   <div
-                                    className={`guess-feedback flex items-center gap-1  p-1 rounded-md  ${
+                                    className={`guess-feedback flex items-center gap-1 p-1 rounded-md ${
                                       guess.matches.height
                                         ? "bg-green-500/30 text-green-300 border border-green-500/40"
                                         : "bg-red-500/30 text-red-300 border border-red-500/40"
                                     }`}
                                   >
-                                    {guess.matches.height ? (
-                                      <FaCheck
-                                        className="text-green-400"
-                                        size={12}
-                                      />
+                                    {typeof FaCheck !== "undefined" ? (
+                                      guess.matches.height ? (
+                                        <FaCheck
+                                          className="text-green-400"
+                                          size={12}
+                                        />
+                                      ) : (
+                                        <FaTimes
+                                          className="text-red-400"
+                                          size={12}
+                                        />
+                                      )
                                     ) : (
-                                      <FaTimes
-                                        className="text-red-400"
-                                        size={12}
-                                      />
+                                      <span>
+                                        {guess.matches.height ? "✓" : "✗"}
+                                      </span>
                                     )}
                                     <span>Height</span>
                                   </div>
@@ -626,22 +687,28 @@ function App() {
                                   (h) => h.name === "weight"
                                 ) && (
                                   <div
-                                    className={`guess-feedback flex items-center gap-1  p-1 rounded-md  ${
+                                    className={`guess-feedback flex items-center gap-1 p-1 rounded-md ${
                                       guess.matches.weight
                                         ? "bg-green-500/30 text-green-300 border border-green-500/40"
                                         : "bg-red-500/30 text-red-300 border border-red-500/40"
                                     }`}
                                   >
-                                    {guess.matches.weight ? (
-                                      <FaCheck
-                                        className="text-green-400"
-                                        size={12}
-                                      />
+                                    {typeof FaCheck !== "undefined" ? (
+                                      guess.matches.weight ? (
+                                        <FaCheck
+                                          className="text-green-400"
+                                          size={12}
+                                        />
+                                      ) : (
+                                        <FaTimes
+                                          className="text-red-400"
+                                          size={12}
+                                        />
+                                      )
                                     ) : (
-                                      <FaTimes
-                                        className="text-red-400"
-                                        size={12}
-                                      />
+                                      <span>
+                                        {guess.matches.weight ? "✓" : "✗"}
+                                      </span>
                                     )}
                                     <span>Weight</span>
                                   </div>
@@ -670,10 +737,27 @@ function App() {
                   animate={{ scale: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <h2 className="text-2xl font-bold mb-4 text-red-400">
-                    Game Over!
+                  <h2 className="text-2xl font-bold mb-4">
+                    {playerWon ? (
+                      <span className="text-green-400">
+                        Congratulations! You Won!
+                      </span>
+                    ) : (
+                      <span className="text-red-400">Game Over!</span>
+                    )}
                   </h2>
-                  <p className="text-lg mb-6">The Pokémon was:</p>
+                  <p className="text-lg mb-6">
+                    {playerWon ? (
+                      <>
+                        You correctly guessed:{" "}
+                        <span className="text-green-400 font-semibold">
+                          {pokemon?.name.english}
+                        </span>
+                      </>
+                    ) : (
+                      <>The Pokémon was:</>
+                    )}
+                  </p>
 
                   <div className="flex flex-col items-center justify-center mb-6">
                     <img

@@ -31803,5 +31803,29 @@
         "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROvXs362KtMx7G6OTSyZuxjtw7IM4xWX6AWA&s",
         "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/898.png"
       }
+    },
+    {
+      "id": 900,
+      "name": {
+        "english": "Sonic",
+        "japanese": "バドレックス",
+        "chinese": "蕾冠王",
+        "french": "Sylveroy"
+      },
+      "type": ["Hedgehog"],
+      "species": "King Pokémon",
+      "description": "Calyrex is known in legend as a king that ruled over Galar in ancient times. It has the power to cause hearts to mend and plants to spring forth.",
+      "evolution": {},
+      "profile": {
+        "height": "1 m",
+        "weight": "8 kg",
+        "gender": "Genderless",
+        "ability": [["Unnerve", "false"]]
+      },
+      "image": {
+        "sprite": "https://i.imgur.com/Q6tQFE6g.jpg",
+        "thumbnail": "https://i.imgur.com/Q6tQFE6g.jpg",
+        "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/898.png"
+      }
     }
   ]

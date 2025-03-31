@@ -31827,5 +31827,29 @@
         "thumbnail": "https://i.imgur.com/oCJ3SK6.png",
         "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/898.png"
       }
+    },
+    {
+      "id": 901,
+      "name": {
+        "english": "Don Pollo",
+        "japanese": "バドレックス",
+        "chinese": "蕾冠王",
+        "french": "Sylveroy"
+      },
+      "type": ["Lingangu"],
+      "species": "King Pokémon",
+      "description": "Calyrex is known in legend as a king that ruled over Galar in ancient times. It has the power to cause hearts to mend and plants to spring forth.",
+      "evolution": {},
+      "profile": {
+        "height": "10 m",
+        "weight": "999 kg",
+        "gender": "Genderless",
+        "ability": [["Unnerve", "false"]]
+      },
+      "image": {
+        "sprite": "https://i.imgur.com/fWi2NtR.png",
+        "thumbnail": "https://i.imgur.com/fWi2NtR.png",
+        "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/898.png"
+      }
     }
   ]

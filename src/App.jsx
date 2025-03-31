@@ -82,7 +82,6 @@ function App() {
       const randomIndex = Math.floor(Math.random() * pokedex.length);
       const selectedPokemon = pokedex[randomIndex];
       setPokemon(selectedPokemon);
-      console.log(selectedPokemon);
       setGameStarted(true);
       setAttempts(0);
       setGuessHistory([]);
